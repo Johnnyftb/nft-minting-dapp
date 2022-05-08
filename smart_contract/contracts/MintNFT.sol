@@ -3,22 +3,25 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract mintnft is ERC721 {
+
+    using Strings for uint256;
 
     // Constructor
     constructor (
         uint256 _mintPrice,
         uint256 _maxMintAmount,
         uint256 _collectionSize,
-        string _baseURI,
-        string _baseExtension
-    ) public ERC721("Baker Boys", "BB") {
+        string memory _baseURI,
+        string memory _baseExtension
+    ) ERC721("Baker Boys", "BB") {
         tokenCounter = 0;
         mintPrice = _mintPrice;
         maxMintAmount = _maxMintAmount;
         collectionSize = _collectionSize;
-        baseURI = _baseURI,
+        baseURI = _baseURI;
         baseExtension = _baseExtension;
     }
 
@@ -62,15 +65,17 @@ contract mintnft is ERC721 {
         }
     }
 
-    // Set Token URI
-    function setTokenURI(uint256 _tokenId, string memory _tokenURI) public {
-        // Require Function Caller to be Approved or the Owner of the NFT
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721: Caller is not owner nor approved"
-        );
+    // Return TokenURI
+    function tokenURI(uint256 _tokenId) public view override returns (string memory) {
+        require(_exists(_tokenId), "ERC721Metadata: URI query for nonexistent token");
 
-        // Set Token URI
-        _setTokenURI(_tokenId, _tokenURI);
+        return string(abi.encodePacked(baseURI, _tokenId.toString()));
     }
-}
+
+    // Find Token Owner
+    function getTokenOwner(uint256 _tokenId) public view returns (address) {
+        require(_exists(_tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+        return tokenIdToOwner[_tokenId];
+    }
+} 
