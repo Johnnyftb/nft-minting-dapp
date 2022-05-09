@@ -1,5 +1,11 @@
 import React from 'react';
-import {useEthers} from "@usedapp/core";
+import {useEthers, useContractFunction} from "@usedapp/core";
+import {utils} from "ethers";
+import { Contract } from '@ethersproject/contracts'
+
+import {contractAddress, contractABI} from "../constants/constants";
+
+const contract = new Contract(contractAddress, contractABI);
 
 export default function Content() {
 
@@ -14,6 +20,8 @@ export default function Content() {
     function addMintAmount() {
         setMintAmount((prev) => prev + 1);
     }
+
+    console.log(contractAddress);
 
 
     return (
@@ -35,6 +43,7 @@ export default function Content() {
                         <h2 className="fw-bold mx-4 mt-1">{mintAmount}</h2>
                         <i className="fa fa-angle-right fa-2x" onClick={addMintAmount}></i>
                     </div>
+                    <p className="text-center">1 NFT = 0.05 ETH</p>
                     <div className="d-flex justify-content-center mt-1">
                         {!account || mintAmount > 1 ? (
                             <button className="btn bg-secondary rounded-pill text-light px-3 py-2">Mint disabled</button>
@@ -43,6 +52,8 @@ export default function Content() {
                         )}
                     </div>
                     {mintAmount > 1 && <p className="lead text-danger text-center">Max Mint Amount is 1!</p> }
+                    <p className="lead mt-5">Please use Rinkeby network</p>
+                    <p className="lead">Contract Address: <a href={`https://rinkeby.etherscan.io/address/${contractAddress}#code`}>{contractAddress}</a></p>
                 </div>
                 <img src="/images/breadman.png" alt="" />
             </div>
