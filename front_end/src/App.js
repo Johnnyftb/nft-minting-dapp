@@ -1,12 +1,16 @@
 import './App.css';
 import { Navbar, Content } from "./components/index";
+import {DAppProvider, Rinkeby} from "@usedapp/core";
 
 function App() {
   return (
-    <div className="App">
-      <Navbar />
-      <Content />
-    </div>
+    <DAppProvider config={{networks: [Rinkeby]}}>
+      <div className="App">
+        <Navbar />
+        <Content />
+      </div>
+    </DAppProvider>
+    
   );
 }
 

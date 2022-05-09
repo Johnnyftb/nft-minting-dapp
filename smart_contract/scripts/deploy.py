@@ -9,8 +9,8 @@ def deploy_contract():
     account = get_account()
     contract = mintnft.deploy(base_uri, base_extension, {"from": account, "gas_limit": 10000000}, publish_source=config["networks"][network.show_active()].get("verify", False))
     print("Contract has been deployed")
-    mint(account, contract)
-    withdraw(account, contract)
+    #mint(account, contract)
+    #withdraw(account, contract)
 
 def mint(account, contract):
     contract.mintNFT(1, {"from": account, "value": 60000000000000000})
