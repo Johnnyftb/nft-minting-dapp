@@ -3,14 +3,13 @@ import {useEthers, useContractFunction} from "@usedapp/core";
 import {utils} from "ethers";
 import { Contract } from '@ethersproject/contracts'
 
-import {contractAddress, contractABI} from "../constants/constants";
+import {contractAddress, contractABI, mintPrice} from "../constants/constants";
 
 const contract = new Contract(contractAddress, contractABI);
 
 export default function Content() {
 
     const { activateBrowserWallet, account, deactivate } = useEthers();
-
     const [mintAmount, setMintAmount] = React.useState(0);
 
     function minusMintAmount() {
@@ -21,7 +20,11 @@ export default function Content() {
         setMintAmount((prev) => prev + 1);
     }
 
-    console.log(contractAddress);
+    const {state, send} = useContractFunction(contract, 'mintNFT', {transactionName: "Stake Tokens"});
+
+    function mint() {
+        send(mintAmount, {value: utils.parseEther((mintAmount * mintPrice).toString())});
+    }
 
 
     return (
@@ -48,7 +51,7 @@ export default function Content() {
                         {!account || mintAmount > 1 ? (
                             <button className="btn bg-secondary rounded-pill text-light px-3 py-2">Mint disabled</button>
                         ) : (
-                            <button className="btn bg-primary rounded-pill text-light px-3 py-2">Mint</button>
+                            <button className="btn bg-primary rounded-pill text-light px-3 py-2" onClick={mint}>Mint</button>
                         )}
                     </div>
                     {mintAmount > 1 && <p className="lead text-danger text-center">Max Mint Amount is 1!</p> }
